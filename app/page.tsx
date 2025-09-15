@@ -5,7 +5,6 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { ShoppingCart, Plus } from "lucide-react"
 import { MercadoPagoModal } from "@/components/mercado-pago-modal"
-import { useMqtt } from "@/hooks/useMqtt";
 
 interface Product {
   id: number
@@ -80,7 +79,7 @@ const categories = [
   { id: "saludable", name: "Saludable" },
 ]
 
-export function FoodOrderingApp() {
+export default function FoodOrderingApp() {
   const [selectedCategory, setSelectedCategory] = useState("todos")
   const [cart, setCart] = useState<CartItem[]>([])
   const [showPaymentModal, setShowPaymentModal] = useState(false)
@@ -232,37 +231,4 @@ export function FoodOrderingApp() {
       />
     </div>
   )
-}
-
-
-export default function usa_mqtt() {
-  const { client, message, error } = useMqtt(
-    "wss://test.mosquitto.org:8081",
-    "maquina/estado"
-  );
-
-  return (
-    <div className="p-6 max-w-md mx-auto">
-      <h1 className="text-2xl font-bold mb-4">Cliente MQTT</h1>
-
-      {error ? (
-        <div className="p-4 bg-red-100 text-red-700 rounded-lg">
-          {error}
-        </div>
-      ) : (
-        <>
-          <p className="mb-2">
-            Último mensaje: <span className="font-mono">{message || "Esperando..."}</span>
-          </p>
-
-          <button
-            onClick={() => client?.publish("maquina/estado", "Hola desde React!")}
-            className="px-4 py-2 bg-blue-500 text-white rounded-lg shadow"
-          >
-            Enviar mensaje
-          </button>
-        </>
-      )}
-    </div>
-  );
 }
