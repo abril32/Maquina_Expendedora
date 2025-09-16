@@ -64,7 +64,7 @@ export function MercadoPagoModal({ isOpen, onClose, total, items }: MercadoPagoM
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-md mx-auto">
+      <DialogContent className="max-w-md mx-auto max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <div className="flex items-center justify-between">
             <DialogTitle className="text-xl font-bold">Pagar con Mercado Pago</DialogTitle>
