@@ -70,14 +70,6 @@ const products: Product[] = [
   },
 ]
 
-const categories = [
-  { id: "todos", name: "Todos" },
-  { id: "snacks", name: "Snacks" },
-  { id: "dulces", name: "Dulces" },
-  { id: "bebidas", name: "Bebidas" },
-  { id: "sandwiches", name: "Sándwiches" },
-  { id: "saludable", name: "Saludable" },
-]
 
 export default function FoodOrderingApp() {
   const [selectedCategory, setSelectedCategory] = useState("todos")
@@ -149,23 +141,6 @@ export default function FoodOrderingApp() {
 
       <div className="max-w-7xl mx-auto p-4 flex gap-6">
         {/* Main Content */}
-        <div className="flex-1">
-          {/* Categories */}
-          <div className="flex gap-2 mb-6 overflow-x-auto pb-2">
-            {categories.map((category) => (
-              <Button
-                key={category.id}
-                variant={selectedCategory === category.id ? "default" : "outline"}
-                onClick={() => setSelectedCategory(category.id)}
-                className={`whitespace-nowrap ${
-                  selectedCategory === category.id ? "bg-red-500 hover:bg-red-600 text-white" : "hover:bg-red-50"
-                }`}
-              >
-                {category.name}
-              </Button>
-            ))}
-          </div>
-
           {/* Products Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredProducts.map((product) => (
@@ -228,7 +203,7 @@ export default function FoodOrderingApp() {
                             </div>
                           ))}
                 </div>
-              )}
+                )}
 
               <div className="border-t pt-4 mb-4">
                 <div className="flex justify-between items-center text-lg font-bold">
@@ -247,7 +222,6 @@ export default function FoodOrderingApp() {
             </CardContent>
           </Card>
         </div>
-      </div>
 
       {/* Mercado Pago Modal */}
       <MercadoPagoModal
@@ -255,7 +229,8 @@ export default function FoodOrderingApp() {
         onClose={() => setShowPaymentModal(false)}
         total={getTotalPrice()}
         items={cart}
-      />
-    </div>
+        />
+      </div>
+  
   )
 }
