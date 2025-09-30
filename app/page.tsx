@@ -105,6 +105,24 @@ export default function FoodOrderingApp() {
     return cart.reduce((total, item) => total + item.quantity, 0)
   }
 
+  const removeFromCart = (productId: number) => {
+    setCart((prevCart) => {
+      const existingItem = prevCart.find((item) => item.id === productId)
+      if (!existingItem) return prevCart
+  
+      if (existingItem.quantity > 1) {
+        // Resta 1 a la cantidad
+        return prevCart.map((item) =>
+          item.id === productId ? { ...item, quantity: item.quantity - 1 } : item
+        )
+      }
+  
+      // Si la cantidad es 1, elimina el producto del carrito
+      return prevCart.filter((item) => item.id !== productId)
+    })
+  }
+  
+
   const formatPrice = (price: number) => {
     return `$${price.toLocaleString()}`
   }
@@ -195,11 +213,20 @@ export default function FoodOrderingApp() {
                         <p className="font-medium text-sm">{item.name}</p>
                         <p className="text-gray-500 text-xs">
                           {formatPrice(item.price)} x {item.quantity}
-                        </p>
-                      </div>
-                      <span className="font-semibold">{formatPrice(item.price * item.quantity)}</span>
-                    </div>
-                  ))}
+                          </p>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <span className="font-semibold">{formatPrice(item.price * item.quantity)}</span>
+                            <Button
+                            size="sm"
+                            variant="destructive"
+                            onClick={() => removeFromCart(item.id)}
+                            >
+                              Quitar
+                            </Button>
+                            </div>
+                            </div>
+                          ))}
                 </div>
               )}
 
