@@ -139,20 +139,19 @@ export default function FoodOrderingApp() {
         </div>
       </header>
 
-      <div className="max-w-7xl mx-auto p-4 flex gap-6 relative">
-        {/* Main Content */}
-          {/* Products Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredProducts.map((product) => (
-              <Card key={product.id} className="overflow-hidden hover:shadow-lg transition-shadow w-[300px]">
-                <div className="aspect-square overflow-hidden">
-                  <img
-                    src={product.image || "/placeholder.svg"}
-                    alt={product.name}
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-                <CardContent className="p-4 w-[250px] ">
+      <div className="absolute top-[100px] left-1/2 -translate-x-1/2 w-full max-w-7xl p-4 flex gap-6">
+      {/* Products Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {filteredProducts.map((product) => (
+          <Card key={product.id} className="overflow-hidden hover:shadow-lg transition-shadow w-[300px]">
+            <div className="aspect-square overflow-hidden">
+              <img
+              src={product.image || "/placeholder.svg"}
+              alt={product.name}
+              className="w-full h-full object-cover"
+              />
+              </div>
+                <CardContent className=" p-4 w-[250px]">
                   <h3 className="font-semibold text-lg mb-2">{product.name}</h3>
                   <p className="text-gray-600 text-sm mb-3">{product.description}</p>
                   <div className="flex items-center justify-between">
@@ -170,9 +169,11 @@ export default function FoodOrderingApp() {
               </Card>
             ))}
           </div>
-           {/* Cart Sidebar */}
-        <div className="w-80 absolute top-4 right-[-25px]">
-          <Card className="sticky top-4">
+        </div>
+
+        {/* Cart Sidebar */}
+        <div className="w-80">
+          <Card className="sticky top-4 rigth">
             <CardContent className="p-6">
               <h2 className="text-xl font-bold mb-4">Tu Pedido</h2>
 
@@ -220,9 +221,6 @@ export default function FoodOrderingApp() {
             </CardContent>
           </Card>
         </div>
-        </div>
-
-       
 
       {/* Mercado Pago Modal */}
       <MercadoPagoModal
