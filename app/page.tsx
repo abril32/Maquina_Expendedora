@@ -22,51 +22,51 @@ interface CartItem extends Product {
 const products: Product[] = [
   {
     id: 1,
-    name: "Patatas Fritas",
-    description: "Bolsa de patatas fritas crujientes",
-    price: 150,
-    image: "/crispy-potato-chips-bag.png",
-    category: "snacks",
+    name: "Papas Fritas Lays",
+    description: "Bolsa de papas fritas crujientes",
+    price: 900,
+    image: "https://res.cloudinary.com/donns8by6/image/upload/v1761682856/papas_w1nsgd.jpg",
+    category: "snacks"
   },
   {
     id: 2,
-    name: "Barrita Energética",
-    description: "Barrita de avena y frutos secos",
-    price: 180,
-    image: "/nuts-oats-energy-bar.png",
-    category: "snacks",
+    name: "Mogul Extreme ",
+    description: "Gomitas acidas",
+    price: 450,
+    image: "https://res.cloudinary.com/donns8by6/image/upload/v1761682738/gomitas_kjqile.jpg",
+    category: "caramelos"
   },
   {
     id: 3,
-    name: "Refresco Cola",
-    description: "Lata de refresco de cola 33cl",
-    price: 160,
-    image: "/placeholder-mrfdr.png",
-    category: "bebidas",
+    name: "Coca Cola",
+    description: "Lata de refresco de cola 500ml",
+    price: 650,
+    image: "https://res.cloudinary.com/donns8by6/image/upload/v1761682803/coca_fe7h8q.jpg",
+    category: "bebidas"
   },
   {
     id: 4,
-    name: "Sándwich Mixto",
-    description: "Sándwich de jamón y queso",
-    price: 250,
-    image: "/ham-and-cheese-sandwich.png",
-    category: "sandwiches",
+    name: "Alfajor jorgito",
+    description: "Alfajor de chocolate",
+    price: 300,
+    image: "https://res.cloudinary.com/donns8by6/image/upload/v1761684329/alfajor_q7kkyf.webp",
+    category: "caramelos"
   },
   {
     id: 5,
-    name: "Ensalada César",
-    description: "Ensalada fresca con pollo y aderezo",
-    price: 320,
-    image: "/caesar-salad-chicken.png",
-    category: "saludable",
+    name: "Sprite",
+    description: "Botella de refresco de 600ml",
+    price: 690,
+    image: "https://res.cloudinary.com/donns8by6/image/upload/v1761684513/sprite_lpvzd2.jpg",
+    category: "bebidas"
   },
   {
     id: 6,
-    name: "Chocolate",
+    name: "Chocolate Milka",
     description: "Barra de chocolate con leche",
-    price: 120,
-    image: "/milk-chocolate-bar.png",
-    category: "dulces",
+    price: 1200,
+    image: "https://res.cloudinary.com/donns8by6/image/upload/v1761684217/milka_zzirdf.jpg",
+    category: "caramelos"
   },
 ]
 
