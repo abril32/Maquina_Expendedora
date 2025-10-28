@@ -76,4 +76,8 @@ export default defineConfig({
      url: 'http://localhost:3000',
      reuseExistingServer: process.env.CI === "github"? true: false,
   },
+   // Global setup for all tests.
+   globalSetup: "./tests/utils/global.setup.ts",
+   // Global teardown for all tests.
+   globalTeardown: "./tests/utils/global.teardown.ts"
 });
