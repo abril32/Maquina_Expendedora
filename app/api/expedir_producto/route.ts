@@ -1,5 +1,6 @@
 import mqtt from "mqtt";
 import dotenv from "dotenv";
+import { MercadoPagoConfig, Preference } from 'mercadopago';
 
 // Cargar las variables de entorno solo si no es Next.js
 dotenv.config();
@@ -25,4 +26,26 @@ export async function POST() {
   });
 
   return Response.json({ message: "Hola mundo" });
+}
+
+//mercado pago
+const client = new MercadoPagoConfig({ accessToken: process.env.MP_ACCESS_TOKEN });
+
+export async function POST(req) {
+  const body = await req.json();
+  const preference = new Preference(client);
+
+  const result = await preference.create({
+    body: {
+      items: [
+        {
+          title: body.title || 'Mi producto',
+          quantity: 1,
+          unit_price: 2000
+        }
+      ]
+    }
+  });
+
+  return Response.json({ id: result.id });
 }

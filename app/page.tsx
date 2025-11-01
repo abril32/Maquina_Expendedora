@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { ShoppingCart, Plus } from "lucide-react"
-import { MercadoPagoModal } from "@/components/mercado-pago-modal"
+//import { MercadoPagoModal } from "@/components/mercado-pago-modal"
 
 interface Product {
   id: number
@@ -257,14 +257,6 @@ export default function FoodOrderingApp() {
           </Card>
         </div>
       </div>
-
-      {/* MODAL MERCADO PAGO */}
-      <MercadoPagoModal
-        isOpen={showPaymentModal}
-        onClose={() => setShowPaymentModal(false)}
-        total={getTotalPrice()}
-        items={cart}
-      />
     </div>
   )
 }
