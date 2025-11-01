@@ -21,7 +21,7 @@ preference.create({
 })
 .then((response) => {
   console.log('Respuesta completa:', response);
-  console.log('ID de la preferencia:', response.id || response.result?.id);
+  console.log('ID de la preferencia:', response.id || response?.id);
 })
 .catch((error) => {
   console.error('Error al crear preferencia:', error);

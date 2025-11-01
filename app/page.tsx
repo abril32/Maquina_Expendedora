@@ -135,9 +135,9 @@ export default function FoodOrderingApp() {
   const formatPrice = (price: number) => `$${price.toLocaleString()}`
 
   return (
-    <div className="-h-screen bg-gray-50 dark:bg-gray-900 transition-colors">
+    <div className="min-h-screen-screen bg-gray-50 dark:bg-gray-900 transition-colors">
       {/* HEADER */}
-      <header className="bg-red-500 text-white p-4 shadow-lg">
+      <header className="fondo-header text-white p-4 shadow-lg">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <h1 className="text-2xl font-bold">AutoStop</h1>
           <div className="flex items-center gap-4">      
@@ -175,7 +175,7 @@ export default function FoodOrderingApp() {
       </div>
 
       {/* CONTENIDO PRINCIPAL */}
-      <div className="max-w-7xl mx-auto p-4 flex gap-6 relative">
+      <div className=" max-w-7xl mx-auto p-4 flex gap-6 relative">
         {/* GRID DE PRODUCTOS */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredProducts.map((product) => (
