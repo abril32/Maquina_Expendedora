@@ -41,7 +41,8 @@ export async function POST(req) {
         {
           title: body.title || 'Mi producto',
           quantity: 1,
-          unit_price: 2000
+          unit_price: 2000,
+          id=''
         }
       ]
     }
