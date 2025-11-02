@@ -239,6 +239,7 @@ export default function FoodOrderingApp() {
                           {formatPrice(item.price * item.quantity)}
                         </span>
                         <Button
+                          className="bg-red-500"
                           size="sm"
                           variant="destructive"
                           onClick={() => removeFromCart(item.id)}
