@@ -139,7 +139,7 @@ export default function FoodOrderingApp() {
       {/* HEADER */}
       <header className="fondo-header text-white p-4 shadow-lg">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
-          <h1 className="text-2xl font-bold">AutoStop</h1>
+          <h1 className="text-2xl font-sans:'Times New Roman', Times, serif ">AutoStop</h1>
           <div className="flex items-center gap-4">      
             <ModeToggle />
           </div>
@@ -155,7 +155,7 @@ export default function FoodOrderingApp() {
       </header>
 
       {/* CATEGORÍAS */}
-      <div className="max-w-7xl mx-auto px-4 mt-6">
+      <div className="max-w-7xl mx-auto px-4 mt-6 caja">
         <div className="flex gap-2 overflow-x-auto pb-2">
           {categories.map((category) => (
             <Button
@@ -175,7 +175,7 @@ export default function FoodOrderingApp() {
       </div>
 
       {/* CONTENIDO PRINCIPAL */}
-      <div className=" max-w-7xl mx-auto p-4 flex gap-6 relative">
+      <div className=" max-w-7xl mx-auto p-4 flex gap-6 relative caja">
         {/* GRID DE PRODUCTOS */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredProducts.map((product) => (
@@ -212,7 +212,7 @@ export default function FoodOrderingApp() {
         </div>
 
         {/* CARRITO */}
-        <div className="w-80 absolute top-4 right-[-25px]">
+        <div className="w-80 absolute top-4 right-[-25px] caja">
           <Card className="sticky top-4">
             <CardContent className="p-6">
               <h2 className="text-xl font-bold mb-4">Tu Pedido</h2>
@@ -252,7 +252,7 @@ export default function FoodOrderingApp() {
                 </div>
               )}
 
-              <div className="border-t pt-4 mb-4">
+              <div className="border-t pt-4 mb-4 caja">
                 <div className="flex justify-between items-center text-lg font-bold">
                   <span>Total:</span>
                   <span>{formatPrice(getTotalPrice())}</span>
@@ -262,7 +262,7 @@ export default function FoodOrderingApp() {
               <Button
                 onClick={() => setShowPaymentModal(true)}
                 disabled={cart.length === 0}
-                className="w-full bg-green-500 hover:bg-green-600 text-white py-3"
+                className="w-full bg-green-500 hover:bg-green-600 text-white py-3 caja"
               >
                 Pagar Ahora
               </Button>
@@ -282,7 +282,7 @@ export function ModeToggle() {
       <DropdownMenuTrigger asChild>
         <Button variant="outline" size="icon">
           <Sun className="h-[1.2rem] w-[1.2rem] scale-100 rotate-0 transition-all dark:scale-0 dark:-rotate-90" />
-          <Moon className="absolute h-[1.2rem] w-[1.2rem] scale-0 rotate-90 transition-all dark:scale-100 dark:rotate-0" />
+          <Moon className="border-none absolute h-[1.2rem] w-[1.2rem] scale-0 rotate-90 transition-all dark:scale-100 dark:rotate-0" />
           <span className="sr-only">Toggle theme</span>
         </Button>
       </DropdownMenuTrigger>
