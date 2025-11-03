@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "build": "next build",
-    "dev": "next dev",
+    "dev": "node ./tests/utils/setup.ts && next dev && node ./tests/utils/teardown.ts",
     "lint": "next lint",
     "start": "next start",
     "test": "npx playwright test",

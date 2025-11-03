@@ -1,29 +1,20 @@
-import { MercadoPagoConfig, Preference } from 'mercadopago';
+// // SDK de Mercado Pago
+// import { MercadoPagoConfig, Preference } from 'mercadopago';
+// // Agrega credenciales
+// const client = new MercadoPagoConfig({ accessToken: 'APP_USR-3733029066978986-103121-c560d97529e325dcd4b8f25edcf96650-2959473187' });
 
-//mercado pago
-const client = new MercadoPagoConfig({
-  accessToken: process.env.MP_ACCESS_TOKEN as string,
-});
+// const preference = new Preference(client);
 
-export async function POST(req: { json: () => any; }) {
-  const body = await req.json();
-  const preference = new Preference(client);
-
-  const result = await preference.create({
-    body: {
-      items: [
-        {
-          title: body.title || 'Mi producto',
-          quantity: 1,
-          unit_price: 2000,
-          id:''
-        }
-      ]
-    }
-  });
-
-  return Response.json(
-    console.log("Access Token cargado:", process.env.TEST_ACCESS_TOKEN ? "✅ OK" : "❌ NO DEFINIDO")
-);
-  
-}
+// preference.create({
+//   body: {
+//     items: [
+//       {
+//         title: 'Mi producto',
+//         quantity: 1,
+//         unit_price: 2000,
+//       }
+//     ],
+//   }
+// })
+// .then(console.log)
+// .catch(console.log);
