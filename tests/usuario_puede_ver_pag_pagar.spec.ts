@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
 
-test('test', async ({ page }) => {
+test('usuario_puede_ver_pagina', async ({ page }) => {
   await page.goto('http://localhost:3000/');
   await page.locator('div').filter({ hasText: /^\$180Añadir al Carrito$/ }).getByRole('button').click();
   await page.locator('div').filter({ hasText: /^\$150Añadir al Carrito$/ }).getByRole('button').click();

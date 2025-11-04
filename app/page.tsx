@@ -1,13 +1,10 @@
+"use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { ShoppingCart, Plus } from "lucide-react"
-//import { MercadoPagoModal } from "@/components/mercado-pago-modal"
-
-import * as React from "react"
-import { Moon, Sun } from "lucide-react"
+import { ShoppingCart, Plus, Moon, Sun } from "lucide-react"
 import { useTheme } from "next-themes"
 import {
   DropdownMenu,
@@ -22,63 +19,12 @@ interface Product {
   description: string
   price: number
   image: string
-  category: string
+  category?: string
 }
 
 interface CartItem extends Product {
   quantity: number
 }
-
-const products: Product[] = [
-  {
-    id: 1,
-    name: "Papas Fritas Lays",
-    description: "Bolsa de papas fritas crujientes",
-    price: 900,
-    image: "https://res.cloudinary.com/donns8by6/image/upload/v1761682856/papas_w1nsgd.jpg",
-    category: "snacks",
-  },
-  {
-    id: 2,
-    name: "Mogul Extreme",
-    description: "Gomitas ácidas",
-    price: 450,
-    image: "https://res.cloudinary.com/donns8by6/image/upload/v1761682738/gomitas_kjqile.jpg",
-    category: "caramelos",
-  },
-  {
-    id: 3,
-    name: "Coca Cola",
-    description: "Lata de refresco de cola 500ml",
-    price: 650,
-    image: "https://res.cloudinary.com/donns8by6/image/upload/v1761682803/coca_fe7h8q.jpg",
-    category: "bebidas",
-  },
-  {
-    id: 4,
-    name: "Alfajor Jorgito",
-    description: "Alfajor de chocolate",
-    price: 300,
-    image: "https://res.cloudinary.com/donns8by6/image/upload/v1761684329/alfajor_q7kkyf.webp",
-    category: "caramelos",
-  },
-  {
-    id: 5,
-    name: "Sprite",
-    description: "Botella de refresco de 600ml",
-    price: 690,
-    image: "https://res.cloudinary.com/donns8by6/image/upload/v1761684513/sprite_lpvzd2.jpg",
-    category: "bebidas",
-  },
-  {
-    id: 6,
-    name: "Chocolate Milka",
-    description: "Barra de chocolate con leche",
-    price: 1200,
-    image: "https://res.cloudinary.com/donns8by6/image/upload/v1761684217/milka_zzirdf.jpg",
-    category: "caramelos",
-  },
-]
 
 const categories = [
   { id: "todos", name: "Todos" },
@@ -88,16 +34,43 @@ const categories = [
 ]
 
 export default function FoodOrderingApp() {
+  const [productos, setProductos] = useState<Product[]>([])
   const [selectedCategory, setSelectedCategory] = useState("todos")
   const [cart, setCart] = useState<CartItem[]>([])
   const [showPaymentModal, setShowPaymentModal] = useState(false)
 
-  // Filtro dinámico por categoría
+  // ✅ Llamada a la API de Prisma y mapeo de campos
+  useEffect(() => {
+    const fetchProductos = async () => {
+      try {
+        const res = await fetch("/api/productos")
+        const data = await res.json()
+
+        const mapped = data.map((item: any) => ({
+          id: item.id,
+          name: item.descripcion,
+          description: item.descripcion, // tu modelo no tiene descripción separada
+          price: item.precio,
+          image: item.imagen_descriptiva,
+          category: "todos", // opcional
+        }))
+
+        setProductos(mapped)
+      } catch (error) {
+        console.error("Error al cargar productos:", error)
+      }
+    }
+
+    fetchProductos()
+  }, [])
+
+  // ✅ Filtrado por categoría (por ahora todos)
   const filteredProducts =
     selectedCategory === "todos"
-      ? products
-      : products.filter((p) => p.category === selectedCategory)
+      ? productos
+      : productos.filter((p) => p.category === selectedCategory)
 
+  // === Tu lógica de carrito se mantiene igual ===
   const addToCart = (product: Product) => {
     setCart((prevCart) => {
       const existingItem = prevCart.find((item) => item.id === product.id)
@@ -267,6 +240,7 @@ export default function FoodOrderingApp() {
               </Button>
             </CardContent>
           </Card>
+          {/* MODAL MERCADO PAGO */}
         </div>
       </div>
     </div>

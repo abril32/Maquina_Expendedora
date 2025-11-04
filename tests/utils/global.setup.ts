@@ -6,7 +6,7 @@ const productos = [
     name: "Papas Fritas Lays",
     description: "Bolsa de papas fritas crujientes",
     price: 900,
-    image: "https://res.cloudinary.com/donns8by6/image/upload/v1761682856/papas_w1nsgd.jpg",
+    image: "https://res.cloudinary.com/donns8by6/image/upload/v1762290547/papas_p1rrbj.png",
     category: "snacks",
   },
   {
@@ -14,7 +14,7 @@ const productos = [
     name: "Mogul Extreme",
     description: "Gomitas ácidas",
     price: 450,
-    image: "https://res.cloudinary.com/donns8by6/image/upload/v1761682738/gomitas_kjqile.jpg",
+    image: "https://res.cloudinary.com/donns8by6/image/upload/v1762290653/gomitas_fbogvq.png",
     category: "caramelos",
   },
   {
@@ -22,7 +22,7 @@ const productos = [
     name: "Coca Cola",
     description: "Lata de refresco de cola 500ml",
     price: 650,
-    image: "https://res.cloudinary.com/donns8by6/image/upload/v1761682803/coca_fe7h8q.jpg",
+    image: "https://res.cloudinary.com/donns8by6/image/upload/v1762290747/coca_o73bxk.png",
     category: "bebidas",
   },
   {
@@ -30,7 +30,7 @@ const productos = [
     name: "Alfajor Jorgito",
     description: "Alfajor de chocolate",
     price: 300,
-    image: "https://res.cloudinary.com/donns8by6/image/upload/v1761684329/alfajor_q7kkyf.webp",
+    image: "https://res.cloudinary.com/donns8by6/image/upload/v1762290303/alfajor_li7u92.png",
     category: "caramelos",
   },
   {
@@ -38,7 +38,7 @@ const productos = [
     name: "Sprite",
     description: "Botella de refresco de 600ml",
     price: 690,
-    image: "https://res.cloudinary.com/donns8by6/image/upload/v1761684513/sprite_lpvzd2.jpg",
+    image: "https://res.cloudinary.com/donns8by6/image/upload/v1762290198/sprit_mxoous.png",
     category: "bebidas",
   },
   {
@@ -46,7 +46,7 @@ const productos = [
     name: "Chocolate Milka",
     description: "Barra de chocolate con leche",
     price: 1200,
-    image: "https://res.cloudinary.com/donns8by6/image/upload/v1761684217/milka_zzirdf.jpg",
+    image: "https://res.clodescricionudinary.com/donns8by6/image/upload/v1762290427/milk_rwcnae.png",
     category: "caramelos",
   },
 ]
@@ -54,7 +54,7 @@ async function globalSetup() {
   console.log("Ejecutando globalSetup: Inicializando entorno de pruebas...");
 
   // 1. Limpia la base de datos existente.
-  await prisma.productos.deleteMany();
+  await prisma.productos.deleteMany({});
   await prisma.user.deleteMany();
 
   // 2. Inserta datos de prueba.
@@ -73,9 +73,10 @@ async function globalSetup() {
     data: productos.map( (producto) => {
       return{
         id: producto.id,
-        descricion: producto.description,
+        descripcion: producto.description,
         precio: producto.price,
         imagen_descriptiva: producto.image,
+        categoria: producto.category,
       }
     })
   });
