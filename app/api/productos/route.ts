@@ -8,7 +8,7 @@ export async function GET() {
     const productos = await prisma.productos.findMany({
       select: {
         id: true,
-        descricion: true,
+        descripcion: true,
         precio: true,
         imagen_descriptiva: true,
         createdAt: true,
