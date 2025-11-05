@@ -1,29 +1,29 @@
-"use client"
+"use client";
 
-import { useEffect, useState } from "react"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { ShoppingCart, Plus, Moon, Sun } from "lucide-react"
-import { useTheme } from "next-themes"
+import { useEffect, useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { ShoppingCart, Plus, Moon, Sun } from "lucide-react";
+import { useTheme } from "next-themes";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+} from "@/components/ui/dropdown-menu";
 
 interface Product {
-  id: number
-  name: string
-  description: string
-  price: number
-  image: string
-  category?: string
+  id: number;
+  name: string;
+  description: string;
+  price: number;
+  image: string;
+  category?: string;
 }
 
 interface CartItem extends Product {
-  quantity: number
+  quantity: number;
 }
 
 const categories = [
@@ -31,21 +31,21 @@ const categories = [
   { id: "snacks", name: "Snacks" },
   { id: "caramelos", name: "Caramelos" },
   { id: "bebidas", name: "Bebidas" },
-]
+];
 
 export default function FoodOrderingApp() {
-  const [productos, setProductos] = useState<Product[]>([])
-  const [selectedCategory, setSelectedCategory] = useState("todos")
-  const [cart, setCart] = useState<CartItem[]>([])
-  const [showPaymentModal, setShowPaymentModal] = useState(false)
+  const [productos, setProductos] = useState<Product[]>([]);
+  const [selectedCategory, setSelectedCategory] = useState("todos");
+  const [cart, setCart] = useState<CartItem[]>([]);
+  const [showPaymentModal, setShowPaymentModal] = useState(false);
 
   // 🔐 LOGIN / REGISTER STATES
-  const [isLoggedIn, setIsLoggedIn] = useState(true)
-  const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
-  const [confirmPassword, setConfirmPassword] = useState("")
-  const [isRegistering, setIsRegistering] = useState(false)
-  const [user, setUser] = useState<string | null>(null)
+  const [isLoggedIn, setIsLoggedIn] = useState(true);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [isRegistering, setIsRegistering] = useState(false);
+  const [user, setUser] = useState<string | null>(null);
 
   // // ✅ Verifica si el usuario ya está logueado
   // useEffect(() => {
@@ -58,10 +58,10 @@ export default function FoodOrderingApp() {
 
   // ✅ LOGIN
   const handleLogin = async (e: React.FormEvent) => {
-    e.preventDefault()
+    e.preventDefault();
     if (email === "" || password === "") {
-      alert("Por favor completa ambos campos")
-      return
+      alert("Por favor completa ambos campos");
+      return;
     }
 
     try {
@@ -69,25 +69,25 @@ export default function FoodOrderingApp() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
-      })
+      });
 
-      const data = await res.json()
-      if (!res.ok) throw new Error(data.message || "Error al iniciar sesión")
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.message || "Error al iniciar sesión");
 
-      localStorage.setItem("user", email)
-      setUser(email)
-      setIsLoggedIn(true)
+      localStorage.setItem("user", email);
+      setUser(email);
+      setIsLoggedIn(true);
     } catch (err: any) {
-      alert(err.message)
+      alert(err.message);
     }
-  }
+  };
 
   // ✅ REGISTRO
   const handleRegister = async (e: React.FormEvent) => {
-    e.preventDefault()
+    e.preventDefault();
     if (password !== confirmPassword) {
-      alert("Las contraseñas no coinciden")
-      return
+      alert("Las contraseñas no coinciden");
+      return;
     }
 
     try {
@@ -95,30 +95,30 @@ export default function FoodOrderingApp() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
-      })
+      });
 
-      const data = await res.json()
-      if (!res.ok) throw new Error(data.message || "Error al registrarse")
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.message || "Error al registrarse");
 
-      alert("Cuenta creada. Verifica tu correo para activarla ✅")
-      setIsRegistering(false)
+      alert("Cuenta creada. Verifica tu correo para activarla ✅");
+      setIsRegistering(false);
     } catch (err: any) {
-      alert(err.message)
+      alert(err.message);
     }
-  }
+  };
 
   const handleLogout = () => {
-    localStorage.removeItem("user")
-    setUser(null)
-    setIsLoggedIn(false)
-  }
+    localStorage.removeItem("user");
+    setUser(null);
+    setIsLoggedIn(false);
+  };
 
   // ✅ Llamada a la API de Prisma
   useEffect(() => {
     const fetchProductos = async () => {
       try {
-        const res = await fetch("/api/productos")
-        const data = await res.json()
+        const res = await fetch("/api/productos");
+        const data = await res.json();
 
         const mapped = data.map((item: any) => ({
           id: item.id,
@@ -127,61 +127,65 @@ export default function FoodOrderingApp() {
           price: item.precio,
           image: item.imagen_descriptiva,
           category: item.categoria,
-        }))
+        }));
 
-        setProductos(mapped)
+        setProductos(mapped);
       } catch (error) {
-        console.error("Error al cargar productos:", error)
+        console.error("Error al cargar productos:", error);
       }
-    }
+    };
 
-    fetchProductos()
-  }, [])
+    fetchProductos();
+  }, []);
 
   // ✅ Filtrado por categoría
   const filteredProducts = productos.filter((p) => {
     if (selectedCategory === "todos") {
-      return true // Muestra todos si la categoría seleccionada es "todos"
+      return true; // Muestra todos si la categoría seleccionada es "todos"
     }
     // Si no es "todos", filtra por la categoría seleccionada
-    return p.category === selectedCategory
-  })
+    return p.category === selectedCategory;
+  });
 
   // ✅ Lógica del carrito
   const addToCart = (product: Product) => {
     setCart((prevCart) => {
-      const existingItem = prevCart.find((item) => item.id === product.id)
+      const existingItem = prevCart.find((item) => item.id === product.id);
       if (existingItem) {
         return prevCart.map((item) =>
-          item.id === product.id ? { ...item, quantity: item.quantity + 1 } : item
-        )
+          item.id === product.id
+            ? { ...item, quantity: item.quantity + 1 }
+            : item
+        );
       }
-      return [...prevCart, { ...product, quantity: 1 }]
-    })
-  }
+      return [...prevCart, { ...product, quantity: 1 }];
+    });
+  };
 
   const removeFromCart = (productId: number) => {
     setCart((prevCart) => {
-      const existingItem = prevCart.find((item) => item.id === productId)
-      if (!existingItem) return prevCart
+      const existingItem = prevCart.find((item) => item.id === productId);
+      if (!existingItem) return prevCart;
 
       if (existingItem.quantity > 1) {
         return prevCart.map((item) =>
-          item.id === productId ? { ...item, quantity: item.quantity - 1 } : item
-        )
+          item.id === productId
+            ? { ...item, quantity: item.quantity - 1 }
+            : item
+        );
       }
 
-      return prevCart.filter((item) => item.id !== productId)
-    })
-  }
+      return prevCart.filter((item) => item.id !== productId);
+    });
+  };
 
   const getTotalPrice = () =>
-    cart.reduce((total, item) => total + item.price * item.quantity, 0)
+    cart.reduce((total, item) => total + item.price * item.quantity, 0);
 
   const getTotalItems = () =>
-    cart.reduce((total, item) => total + item.quantity, 0)
+    cart.reduce((total, item) => total + item.quantity, 0);
 
-  const formatPrice = (price: number) => `$${price.toLocaleString()}`
+  const formatPrice = (price: number) => `$${price.toLocaleString("es-AR")}`;
 
   // 🔒 Mostrar login / registro si no está autenticado
   if (!isLoggedIn) {
@@ -217,7 +221,9 @@ export default function FoodOrderingApp() {
 
             {isRegistering && (
               <div>
-                <label className="block text-sm mb-1">Confirmar Contraseña</label>
+                <label className="block text-sm mb-1">
+                  Confirmar Contraseña
+                </label>
                 <input
                   type="password"
                   value={confirmPassword}
@@ -260,7 +266,7 @@ export default function FoodOrderingApp() {
           </div>
         </Card>
       </div>
-    )
+    );
   }
 
   // ✅ Si el usuario está logueado, mostrar la app normal
@@ -332,7 +338,9 @@ export default function FoodOrderingApp() {
               </div>
               <CardContent className="p-4 w-[250px]">
                 <h3 className="font-semibold text-lg mb-2">{product.name}</h3>
-                <p className="text-gray-600 text-sm mb-3">{product.description}</p>
+                <p className="text-gray-600 text-sm mb-3">
+                  {product.description}
+                </p>
                 <div className="flex items-center justify-between">
                   <span className="text-red-500 font-bold text-lg">
                     {formatPrice(product.price)}
@@ -349,15 +357,75 @@ export default function FoodOrderingApp() {
               </CardContent>
             </Card>
           ))}
+
+          {/* CARRITO */}
+          <div className="caja">
+            <Card className="sticky top-4">
+              <CardContent className="p-6">
+                <h2 className="text-xl font-bold mb-4">Tu Pedido</h2>
+
+                {cart.length === 0 ? (
+                  <p className="text-gray-500 text-center py-8">
+                    Tu carrito está vacío
+                  </p>
+                ) : (
+                  <div className="space-y-3 mb-4">
+                    {cart.map((item) => (
+                      <div
+                        key={item.id}
+                        className="flex justify-between items-center"
+                      >
+                        <div className="flex-1">
+                          <p className="font-medium text-sm">{item.name}</p>
+                          <p className="text-gray-500 text-xs">
+                            {formatPrice(item.price)} x {item.quantity}
+                          </p>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <span className="font-semibold">
+                            {formatPrice(item.price * item.quantity)}
+                          </span>
+                          <Button
+                            className="bg-red-500"
+                            size="sm"
+                            variant="destructive"
+                            onClick={() => removeFromCart(item.id)}
+                          >
+                            Quitar
+                          </Button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                <div className="border-t pt-4 mb-4 caja">
+                  <div className="flex justify-between items-center text-lg font-bold">
+                    <span>Total:</span>
+                    <span>{formatPrice(getTotalPrice())}</span>
+                  </div>
+                </div>
+
+                <Button
+                  onClick={() => setShowPaymentModal(true)}
+                  disabled={cart.length === 0}
+                  className="w-full bg-green-500 hover:bg-green-600 text-white py-3 caja"
+                >
+                  Pagar Ahora
+                </Button>
+              </CardContent>
+            </Card>
+            {/* MODAL MERCADO PAGO */}
+          </div>
         </div>
       </div>
     </div>
-  )
+  );
 }
 
 // 🌙 Toggle de tema
 export function ModeToggle() {
-  const { setTheme } = useTheme()
+  const { setTheme } = useTheme();
 
   return (
     <DropdownMenu>
@@ -369,10 +437,16 @@ export function ModeToggle() {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
-        <DropdownMenuItem onClick={() => setTheme("light")}>Light</DropdownMenuItem>
-        <DropdownMenuItem onClick={() => setTheme("dark")}>Dark</DropdownMenuItem>
-        <DropdownMenuItem onClick={() => setTheme("system")}>System</DropdownMenuItem>
+        <DropdownMenuItem onClick={() => setTheme("light")}>
+          Light
+        </DropdownMenuItem>
+        <DropdownMenuItem onClick={() => setTheme("dark")}>
+          Dark
+        </DropdownMenuItem>
+        <DropdownMenuItem onClick={() => setTheme("system")}>
+          System
+        </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
-  )
+  );
 }
