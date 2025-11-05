@@ -39,7 +39,81 @@ export default function FoodOrderingApp() {
   const [cart, setCart] = useState<CartItem[]>([])
   const [showPaymentModal, setShowPaymentModal] = useState(false)
 
-  // ✅ Llamada a la API de Prisma y mapeo de campos
+  // 🔐 LOGIN / REGISTER STATES
+  const [isLoggedIn, setIsLoggedIn] = useState(false)
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
+  const [confirmPassword, setConfirmPassword] = useState("")
+  const [isRegistering, setIsRegistering] = useState(false)
+  const [user, setUser] = useState<string | null>(null)
+
+  // ✅ Verifica si el usuario ya está logueado
+  useEffect(() => {
+    const storedUser = localStorage.getItem("user")
+    if (storedUser) {
+      setUser(storedUser)
+      setIsLoggedIn(true)
+    }
+  }, [])
+
+  // ✅ LOGIN
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (email === "" || password === "") {
+      alert("Por favor completa ambos campos")
+      return
+    }
+
+    try {
+      const res = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      })
+
+      const data = await res.json()
+      if (!res.ok) throw new Error(data.message || "Error al iniciar sesión")
+
+      localStorage.setItem("user", email)
+      setUser(email)
+      setIsLoggedIn(true)
+    } catch (err: any) {
+      alert(err.message)
+    }
+  }
+
+  // ✅ REGISTRO
+  const handleRegister = async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (password !== confirmPassword) {
+      alert("Las contraseñas no coinciden")
+      return
+    }
+
+    try {
+      const res = await fetch("/api/auth/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      })
+
+      const data = await res.json()
+      if (!res.ok) throw new Error(data.message || "Error al registrarse")
+
+      alert("Cuenta creada. Verifica tu correo para activarla ✅")
+      setIsRegistering(false)
+    } catch (err: any) {
+      alert(err.message)
+    }
+  }
+
+  const handleLogout = () => {
+    localStorage.removeItem("user")
+    setUser(null)
+    setIsLoggedIn(false)
+  }
+
+  // ✅ Llamada a la API de Prisma
   useEffect(() => {
     const fetchProductos = async () => {
       try {
@@ -49,10 +123,10 @@ export default function FoodOrderingApp() {
         const mapped = data.map((item: any) => ({
           id: item.id,
           name: item.descripcion,
-          description: item.descripcion, // tu modelo no tiene descripción separada
+          description: item.descripcion,
           price: item.precio,
           image: item.imagen_descriptiva,
-          category: "todos", // opcional
+          category: "todos",
         }))
 
         setProductos(mapped)
@@ -64,13 +138,13 @@ export default function FoodOrderingApp() {
     fetchProductos()
   }, [])
 
-  // ✅ Filtrado por categoría (por ahora todos)
+  // ✅ Filtrado por categoría
   const filteredProducts =
     selectedCategory === "todos"
       ? productos
       : productos.filter((p) => p.category === selectedCategory)
 
-  // === Tu lógica de carrito se mantiene igual ===
+  // ✅ Lógica del carrito
   const addToCart = (product: Product) => {
     setCart((prevCart) => {
       const existingItem = prevCart.find((item) => item.id === product.id)
@@ -106,15 +180,107 @@ export default function FoodOrderingApp() {
 
   const formatPrice = (price: number) => `$${price.toLocaleString()}`
 
+  // 🔒 Mostrar login / registro si no está autenticado
+  if (!isLoggedIn) {
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-900">
+        <Card className="w-full max-w-sm p-6 shadow-lg">
+          <h2 className="text-2xl font-bold mb-4 text-center">
+            {isRegistering ? "Crear Cuenta" : "Iniciar Sesión"}
+          </h2>
+
+          <form
+            onSubmit={isRegistering ? handleRegister : handleLogin}
+            className="space-y-4"
+          >
+            <div>
+              <label className="block text-sm mb-1">Correo Electrónico</label>
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="w-full border border-gray-300 dark:border-gray-700 p-2 rounded-md bg-white dark:bg-gray-800"
+              />
+            </div>
+            <div>
+              <label className="block text-sm mb-1">Contraseña</label>
+              <input
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="w-full border border-gray-300 dark:border-gray-700 p-2 rounded-md bg-white dark:bg-gray-800"
+              />
+            </div>
+
+            {isRegistering && (
+              <div>
+                <label className="block text-sm mb-1">Confirmar Contraseña</label>
+                <input
+                  type="password"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  className="w-full border border-gray-300 dark:border-gray-700 p-2 rounded-md bg-white dark:bg-gray-800"
+                />
+              </div>
+            )}
+
+            <Button
+              type="submit"
+              className="w-full bg-red-500 hover:bg-red-600 text-white py-2"
+            >
+              {isRegistering ? "Registrarse" : "Entrar"}
+            </Button>
+          </form>
+
+          <div className="text-center mt-4">
+            {isRegistering ? (
+              <p>
+                ¿Ya tienes cuenta?{" "}
+                <button
+                  onClick={() => setIsRegistering(false)}
+                  className="text-red-500 hover:underline"
+                >
+                  Inicia sesión
+                </button>
+              </p>
+            ) : (
+              <p>
+                ¿No tienes cuenta?{" "}
+                <button
+                  onClick={() => setIsRegistering(true)}
+                  className="text-red-500 hover:underline"
+                >
+                  Regístrate
+                </button>
+              </p>
+            )}
+          </div>
+        </Card>
+      </div>
+    )
+  }
+
+  // ✅ Si el usuario está logueado, mostrar la app normal
   return (
-    <div className="min-h-screen-screen bg-gray-50 dark:bg-gray-900 transition-colors">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors">
       {/* HEADER */}
       <header className="fondo-header text-white p-4 shadow-lg">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
-          <h1 className="text-2xl font-sans:'Times New Roman', Times, serif ">AutoStop</h1>
-          <div className="flex items-center gap-4">      
+          <h1 className="text-2xl font-serif">AutoStop</h1>
+
+          <div className="flex items-center gap-4">
+            <p className="text-sm">Hola, {user}</p>
+            <Button
+              variant="outline"
+              size="sm"
+              className="bg-red-600 text-white"
+              onClick={handleLogout}
+            >
+              Cerrar Sesión
+            </Button>
             <ModeToggle />
           </div>
+
           <div className="relative">
             <ShoppingCart className="w-6 h-6" />
             {getTotalItems() > 0 && (
@@ -146,9 +312,8 @@ export default function FoodOrderingApp() {
         </div>
       </div>
 
-      {/* CONTENIDO PRINCIPAL */}
-      <div className=" max-w-7xl mx-auto p-4 flex gap-6 relative caja">
-        {/* GRID DE PRODUCTOS */}
+      {/* PRODUCTOS Y CARRITO */}
+      <div className="max-w-7xl mx-auto p-4 flex gap-6 relative caja">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredProducts.map((product) => (
             <Card
@@ -182,71 +347,12 @@ export default function FoodOrderingApp() {
             </Card>
           ))}
         </div>
-
-        {/* CARRITO */}
-        <div className="w-80 absolute top-4 right-[-25px] caja">
-          <Card className="sticky top-4">
-            <CardContent className="p-6">
-              <h2 className="text-xl font-bold mb-4">Tu Pedido</h2>
-
-              {cart.length === 0 ? (
-                <p className="text-gray-500 text-center py-8">
-                  Tu carrito está vacío
-                </p>
-              ) : (
-                <div className="space-y-3 mb-4">
-                  {cart.map((item) => (
-                    <div
-                      key={item.id}
-                      className="flex justify-between items-center"
-                    >
-                      <div className="flex-1">
-                        <p className="font-medium text-sm">{item.name}</p>
-                        <p className="text-gray-500 text-xs">
-                          {formatPrice(item.price)} x {item.quantity}
-                        </p>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <span className="font-semibold">
-                          {formatPrice(item.price * item.quantity)}
-                        </span>
-                        <Button
-                          className="bg-red-500"
-                          size="sm"
-                          variant="destructive"
-                          onClick={() => removeFromCart(item.id)}
-                        >
-                          Quitar
-                        </Button>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              )}
-
-              <div className="border-t pt-4 mb-4 caja">
-                <div className="flex justify-between items-center text-lg font-bold">
-                  <span>Total:</span>
-                  <span>{formatPrice(getTotalPrice())}</span>
-                </div>
-              </div>
-
-              <Button
-                onClick={() => setShowPaymentModal(true)}
-                disabled={cart.length === 0}
-                className="w-full bg-green-500 hover:bg-green-600 text-white py-3 caja"
-              >
-                Pagar Ahora
-              </Button>
-            </CardContent>
-          </Card>
-          {/* MODAL MERCADO PAGO */}
-        </div>
       </div>
     </div>
   )
 }
 
+// 🌙 Toggle de tema
 export function ModeToggle() {
   const { setTheme } = useTheme()
 
@@ -260,15 +366,9 @@ export function ModeToggle() {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
-        <DropdownMenuItem onClick={() => setTheme("light")}>
-          Light
-        </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => setTheme("dark")}>
-          Dark
-        </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => setTheme("system")}>
-          System
-        </DropdownMenuItem>
+        <DropdownMenuItem onClick={() => setTheme("light")}>Light</DropdownMenuItem>
+        <DropdownMenuItem onClick={() => setTheme("dark")}>Dark</DropdownMenuItem>
+        <DropdownMenuItem onClick={() => setTheme("system")}>System</DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   )
