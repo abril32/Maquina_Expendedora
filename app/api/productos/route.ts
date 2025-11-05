@@ -11,6 +11,7 @@ export async function GET() {
         descripcion: true,
         precio: true,
         imagen_descriptiva: true,
+        categoria: true,
         createdAt: true,
       },
       orderBy: {

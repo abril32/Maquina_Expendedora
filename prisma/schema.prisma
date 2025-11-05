@@ -35,6 +35,6 @@ model Productos {
   descripcion     String
   precio   Float
   imagen_descriptiva  String
-  categoria String //van a haber categorias (bebidas, snacks, dulces, salados)
+  categoria String //van a haber categorias (bebidas, snacks, caramelos)
   createdAt DateTime @default(now())
 }

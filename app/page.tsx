@@ -40,21 +40,21 @@ export default function FoodOrderingApp() {
   const [showPaymentModal, setShowPaymentModal] = useState(false)
 
   // 🔐 LOGIN / REGISTER STATES
-  const [isLoggedIn, setIsLoggedIn] = useState(false)
+  const [isLoggedIn, setIsLoggedIn] = useState(true)
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [confirmPassword, setConfirmPassword] = useState("")
   const [isRegistering, setIsRegistering] = useState(false)
   const [user, setUser] = useState<string | null>(null)
 
-  // ✅ Verifica si el usuario ya está logueado
-  useEffect(() => {
-    const storedUser = localStorage.getItem("user")
-    if (storedUser) {
-      setUser(storedUser)
-      setIsLoggedIn(true)
-    }
-  }, [])
+  // // ✅ Verifica si el usuario ya está logueado
+  // useEffect(() => {
+  //   const storedUser = localStorage.getItem("user")
+  //   if (storedUser) {
+  //     setUser(storedUser)
+  //     setIsLoggedIn(true)
+  //   }
+  // }, [])
 
   // ✅ LOGIN
   const handleLogin = async (e: React.FormEvent) => {
@@ -126,7 +126,7 @@ export default function FoodOrderingApp() {
           description: item.descripcion,
           price: item.precio,
           image: item.imagen_descriptiva,
-          category: "todos",
+          category: item.categoria,
         }))
 
         setProductos(mapped)
@@ -139,10 +139,13 @@ export default function FoodOrderingApp() {
   }, [])
 
   // ✅ Filtrado por categoría
-  const filteredProducts =
-    selectedCategory === "todos"
-      ? productos
-      : productos.filter((p) => p.category === selectedCategory)
+  const filteredProducts = productos.filter((p) => {
+    if (selectedCategory === "todos") {
+      return true // Muestra todos si la categoría seleccionada es "todos"
+    }
+    // Si no es "todos", filtra por la categoría seleccionada
+    return p.category === selectedCategory
+  })
 
   // ✅ Lógica del carrito
   const addToCart = (product: Product) => {
