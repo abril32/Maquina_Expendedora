@@ -128,7 +128,7 @@ export default function FoodOrderingApp() {
           description: item.descripcion,
           price: item.precio,
           image: item.imagen_descriptiva,
-          count: item.cantidad_producto,
+          cantidad_producto: item.cantidad_producto,
           category: item.categoria,
         }));
 
@@ -344,6 +344,13 @@ export default function FoodOrderingApp() {
                 <p className="text-gray-600 text-sm mb-3">
                   {product.description}
                 </p>
+                {/* 👇 NUEVA LÍNEA: cantidad disponible */}
+                <p className="text-sm text-gray-500 mb-2">
+                  {product.cantidad_producto > 0
+                    ? `Stock disponible: ${product.cantidad_producto}`
+                    : "Sin stock"}
+                </p>
+
                 <div className="flex items-center justify-between">
                   <span className="text-red-500 font-bold text-lg">
                     {formatPrice(product.price)}
