@@ -324,7 +324,7 @@ export default function FoodOrderingApp() {
         </div>
       </div>
 
-      {/* PRODUCTOS Y CARRITO */}
+      {/* PRODUCTOS */}
       <div className="max-w-7xl mx-auto p-4 flex gap-6 relative caja">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredProducts.map((product) => (
@@ -344,7 +344,7 @@ export default function FoodOrderingApp() {
                 <p className="text-gray-600 text-sm mb-3">
                   {product.description}
                 </p>
-                {/* 👇 NUEVA LÍNEA: cantidad disponible */}
+                {/* cantidad disponible */}
                 <p className="text-sm text-gray-500 mb-2">
                   {product.cantidad_producto > 0
                     ? `Stock disponible: ${product.cantidad_producto}`
@@ -426,6 +426,7 @@ export default function FoodOrderingApp() {
               </CardContent>
             </Card>
             {/* MODAL MERCADO PAGO */}
+            
           </div>
         </div>
       </div>

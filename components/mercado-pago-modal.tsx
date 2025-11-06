@@ -49,18 +49,13 @@ export function MercadoPagoModal({ isOpen, onClose, total, items }: MercadoPagoM
     return `$${price.toLocaleString()}`
   }
 
-  const handlePayment = async () => {
-    if (!selectedPaymentMethod) return
-
-    setIsProcessing(true)
-
-    // Simular procesamiento de pago
-    setTimeout(() => {
-      setIsProcessing(false)
-      alert("¡Pago procesado exitosamente! Tu pedido está en camino.")
-      onClose()
-    }, 2000)
+const handlePayment = async () => {
+  if (!selectedPaymentMethod) {
+    alert("Por favor selecciona un método de pago.");
+    return;
   }
+}
+  setIsProcessing(true);
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -186,5 +181,4 @@ preference.create({
 })
 .catch((error) => {
   console.error('Error al crear preferencia:', error);
-});
-*/
+});*/
