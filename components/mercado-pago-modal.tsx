@@ -1,37 +1,10 @@
 "use client"
 
-// SDK de Mercado Pago
-import { MercadoPagoConfig, Preference } from 'mercadopago';
-// Agrega credenciales
-const client = new MercadoPagoConfig({ accessToken: 'YOUR_ACCESS_TOKEN' });
-
-const preference = new Preference(client);
-
-preference.create({
-  body: {
-    items: [
-      {
-        title: 'Mi producto',
-        quantity: 1,
-        unit_price: 2000,
-        id: ''
-      }
-    ],
-  }
-})
-.then((response) => {
-  console.log('Respuesta completa:', response);
-  console.log('ID de la preferencia:', response.id || response?.id);
-})
-.catch((error) => {
-  console.error('Error al crear preferencia:', error);
-});
-
-/*
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { CreditCard, Smartphone, Building2, X } from "lucide-react"
+import { useState } from "react"
 
 interface CartItem {
   id: number
@@ -102,7 +75,7 @@ export function MercadoPagoModal({ isOpen, onClose, total, items }: MercadoPagoM
         </DialogHeader>
 
         <div className="space-y-4">
-          {/* Resumen del pedido *//*}
+          {/* Resumen del pedido */}
           <Card>
             <CardContent className="p-4">
               <h3 className="font-semibold mb-3">Resumen del pedido</h3>
@@ -123,7 +96,7 @@ export function MercadoPagoModal({ isOpen, onClose, total, items }: MercadoPagoM
             </CardContent>
           </Card>
 
-          {/* Métodos de pago *//*}
+          {/* Métodos de pago */}
           <div className="space-y-3">
             <h3 className="font-semibold">Selecciona tu método de pago</h3>
             {paymentMethods.map((method) => {
@@ -159,7 +132,7 @@ export function MercadoPagoModal({ isOpen, onClose, total, items }: MercadoPagoM
             })}
           </div>
 
-          {/* Botón de pago *//*}
+          {/* Botón de pago */}
           <Button
             onClick={handlePayment}
             disabled={!selectedPaymentMethod || isProcessing}
@@ -183,5 +156,35 @@ export function MercadoPagoModal({ isOpen, onClose, total, items }: MercadoPagoM
     </Dialog>
   )
 }
-*/
 
+
+
+
+/*
+// SDK de Mercado Pago
+import { MercadoPagoConfig, Preference } from 'mercadopago';
+// Agrega credenciales
+const client = new MercadoPagoConfig({ accessToken: 'YOUR_ACCESS_TOKEN' });
+
+const preference = new Preference(client);
+
+preference.create({
+  body: {
+    items: [
+      {
+        title: 'Mi producto',
+        quantity: 1,
+        unit_price: 2000,
+        id: ''
+      }
+    ],
+  }
+})
+.then((response) => {
+  console.log('Respuesta completa:', response);
+  console.log('ID de la preferencia:', response.id || response?.id);
+})
+.catch((error) => {
+  console.error('Error al crear preferencia:', error);
+});
+*/

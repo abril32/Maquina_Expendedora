@@ -7,6 +7,7 @@ const productos = [
     description: "Bolsa de papas fritas crujientes",
     price: 900,
     image: "https://res.cloudinary.com/donns8by6/image/upload/v1762290547/papas_p1rrbj.png",
+    cantidad_producto: 5,
     category: "snacks",
   },
   {
@@ -15,6 +16,7 @@ const productos = [
     description: "Gomitas ácidas",
     price: 450,
     image: "https://res.cloudinary.com/donns8by6/image/upload/v1762290653/gomitas_fbogvq.png",
+    cantidad_producto: 3,
     category: "caramelos",
   },
   {
@@ -23,6 +25,7 @@ const productos = [
     description: "Lata de refresco de cola 500ml",
     price: 650,
     image: "https://res.cloudinary.com/donns8by6/image/upload/v1762290747/coca_o73bxk.png",
+    cantidad_producto: 6,
     category: "bebidas",
   },
   {
@@ -31,6 +34,7 @@ const productos = [
     description: "Alfajor de chocolate",
     price: 300,
     image: "https://res.cloudinary.com/donns8by6/image/upload/v1762290303/alfajor_li7u92.png",
+    cantidad_producto: 10,
     category: "caramelos",
   },
   {
@@ -39,6 +43,7 @@ const productos = [
     description: "Botella de refresco de 600ml",
     price: 690,
     image: "https://res.cloudinary.com/donns8by6/image/upload/v1762290198/sprit_mxoous.png",
+    cantidad_producto: 10,
     category: "bebidas",
   },
   {
@@ -47,6 +52,7 @@ const productos = [
     description: "Barra de chocolate con leche",
     price: 1200,
     image: "https://res.clodescricionudinary.com/donns8by6/image/upload/v1762290427/milk_rwcnae.png",
+    cantidad_producto: 4,
     category: "caramelos",
   },
 ]
@@ -76,6 +82,7 @@ async function globalSetup() {
         descripcion: producto.description,
         precio: producto.price,
         imagen_descriptiva: producto.image,
+        cantidad_producto: producto.cantidad_producto,
         categoria: producto.category,
       }
     })

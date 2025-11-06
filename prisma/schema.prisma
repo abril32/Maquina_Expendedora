@@ -33,8 +33,9 @@ model User {
 model Productos {
   id        Int      @id @default(autoincrement())
   descripcion     String
-  precio   Float
+  precio   Int
   imagen_descriptiva  String
+  cantidad_producto Int
   categoria String //van a haber categorias (bebidas, snacks, caramelos)
   createdAt DateTime @default(now())
 }

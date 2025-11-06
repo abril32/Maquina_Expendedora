@@ -11,6 +11,7 @@ export async function GET() {
         descripcion: true,
         precio: true,
         imagen_descriptiva: true,
+        cantidad_producto: true,
         categoria: true,
         createdAt: true,
       },
