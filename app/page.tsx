@@ -312,11 +312,10 @@ export default function FoodOrderingApp() {
               key={category.id}
               variant={selectedCategory === category.id ? "default" : "outline"}
               onClick={() => setSelectedCategory(category.id)}
-              className={`whitespace-nowrap ${
-                selectedCategory === category.id
-                  ? "bg-red-500 hover:bg-red-600 text-white"
-                  : "hover:bg-red-50"
-              }`}
+              className={`whitespace-nowrap ${selectedCategory === category.id
+                ? "bg-red-500 hover:bg-red-600 text-white"
+                : "hover:bg-red-50"
+                }`}
             >
               {category.name}
             </Button>
@@ -425,9 +424,15 @@ export default function FoodOrderingApp() {
                 </Button>
               </CardContent>
             </Card>
-            {/* MODAL MERCADO PAGO */}
-            
+
           </div>
+          {/* MODAL MERCADO PAGO */}
+          <MercadoPagoModal
+            isOpen={showPaymentModal}
+            onClose={() => setShowPaymentModal(false)}
+            total={getTotalPrice()}
+            items={cart}
+          />
         </div>
       </div>
     </div>

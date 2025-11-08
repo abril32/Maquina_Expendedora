@@ -49,13 +49,38 @@ export function MercadoPagoModal({ isOpen, onClose, total, items }: MercadoPagoM
     return `$${price.toLocaleString()}`
   }
 
+  
 const handlePayment = async () => {
   if (!selectedPaymentMethod) {
     alert("Por favor selecciona un método de pago.");
     return;
   }
-}
+
   setIsProcessing(true);
+
+  try {
+    // Simular procesamiento de pago
+    await new Promise((resolve) => setTimeout(resolve, 1500));
+
+    // 🔹 Llamar a la API para actualizar stock
+    const res = await fetch("/api/actualizar-stock", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(items), // items = [{ id, quantity, ... }]
+    });
+
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.message);
+
+    alert("✅ Pago confirmado y stock actualizado correctamente.");
+    onClose(); // Cierra el modal
+  } catch (error) {
+    console.error(error);
+    alert("❌ Error al procesar el pago.");
+  } finally {
+    setIsProcessing(false);
+  }
+};
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -99,9 +124,8 @@ const handlePayment = async () => {
               return (
                 <Card
                   key={method.id}
-                  className={`cursor-pointer transition-all ${
-                    selectedPaymentMethod === method.id ? "ring-2 ring-blue-500 bg-blue-50" : "hover:bg-gray-50"
-                  }`}
+                  className={`cursor-pointer transition-all ${selectedPaymentMethod === method.id ? "ring-2 ring-blue-500 bg-blue-50" : "hover:bg-gray-50"
+                    }`}
                   onClick={() => setSelectedPaymentMethod(method.id)}
                 >
                   <CardContent className="p-4">
@@ -112,9 +136,8 @@ const handlePayment = async () => {
                         <p className="text-sm text-gray-500">{method.description}</p>
                       </div>
                       <div
-                        className={`w-4 h-4 rounded-full border-2 ${
-                          selectedPaymentMethod === method.id ? "bg-blue-500 border-blue-500" : "border-gray-300"
-                        }`}
+                        className={`w-4 h-4 rounded-full border-2 ${selectedPaymentMethod === method.id ? "bg-blue-500 border-blue-500" : "border-gray-300"
+                          }`}
                       >
                         {selectedPaymentMethod === method.id && (
                           <div className="w-full h-full rounded-full bg-white scale-50"></div>
@@ -151,7 +174,6 @@ const handlePayment = async () => {
     </Dialog>
   )
 }
-
 
 
 
