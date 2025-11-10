@@ -1,26 +1,16 @@
-import mqtt from "mqtt";
+import {mqtt_client} from "@/lib/mqtt"
 import { NextResponse } from "next/server";
+const topic = process.env.TOPIC;
 
 export async function POST() {
   try {
-    const broker = process.env.BROKER;
-    const topic = process.env.TOPIC;
-
-    if (!broker || !topic) {
-      return NextResponse.json({ error: "Faltan variables de entorno BROKER o TOPIC" }, { status: 400 });
+    if(!topic) {
+    return NextResponse.json({ error: "No esta definico el topic me mqtt" }, { status: 500 });
     }
-
-    const client = mqtt.connect(broker);
-
-    client.on("connect", () => {
-      console.log("✅ Conectado al broker MQTT");
-      client.publish(topic, "comprar", { qos: 1 }, (err) => {
-        if (err) console.error("❌ Error al publicar:", err);
-        else console.log("📤 Mensaje enviado al broker: comprar");
-        client.end();
-      });
-    });
-
+      if(!mqtt_client) {
+    return NextResponse.json({ error: "No tenemos un cliente mqtt" }, { status: 500 });
+    }
+    mqtt_client.publish(topic,"enviando mensaje a la maquina expendedora")
     return NextResponse.json({ success: true, message: "Mensaje 'comprar' enviado al broker ✅" });
   } catch (error) {
     console.error("Error al enviar mensaje MQTT:", error);
