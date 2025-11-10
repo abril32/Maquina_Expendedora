@@ -181,7 +181,10 @@ export default function FoodOrderingApp() {
       return prevCart.filter((item) => item.id !== productId);
     });
   };
+  const solicitarAExpendedoraLiberarProductosSolicitados = async () => {
+    const res = await fetch("/api/expedir_producto", {method:"POST"});
 
+  };
   const getTotalPrice = () =>
     cart.reduce((total, item) => total + item.price * item.quantity, 0);
 
@@ -312,10 +315,11 @@ export default function FoodOrderingApp() {
               key={category.id}
               variant={selectedCategory === category.id ? "default" : "outline"}
               onClick={() => setSelectedCategory(category.id)}
-              className={`whitespace-nowrap ${selectedCategory === category.id
-                ? "bg-red-500 hover:bg-red-600 text-white"
-                : "hover:bg-red-50"
-                }`}
+              className={`whitespace-nowrap ${
+                selectedCategory === category.id
+                  ? "bg-red-500 hover:bg-red-600 text-white"
+                  : "hover:bg-red-50"
+              }`}
             >
               {category.name}
             </Button>
@@ -416,7 +420,9 @@ export default function FoodOrderingApp() {
                 </div>
 
                 <Button
-                  onClick={() => setShowPaymentModal(true)}
+                  onClick={
+                    solicitarAExpendedoraLiberarProductosSolicitados
+                  }
                   disabled={cart.length === 0}
                   className="w-full bg-green-500 hover:bg-green-600 text-white py-3 caja"
                 >
@@ -424,7 +430,6 @@ export default function FoodOrderingApp() {
                 </Button>
               </CardContent>
             </Card>
-
           </div>
           {/* MODAL MERCADO PAGO */}
           <MercadoPagoModal

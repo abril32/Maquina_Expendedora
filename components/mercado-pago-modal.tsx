@@ -69,11 +69,12 @@ const handlePayment = async () => {
       body: JSON.stringify(items), // items = [{ id, quantity, ... }]
     });
 
-    const data = await res.json();
-    if (!res.ok) throw new Error(data.message);
+    const mqttRes = await fetch("/api/comprar", { method: "POST" });
+    if (!mqttRes.ok) throw new Error("Error al enviar el mensaje MQTT");
 
     alert("✅ Pago confirmado y stock actualizado correctamente.");
     onClose(); // Cierra el modal
+    onPaymentSuccess();
   } catch (error) {
     console.error(error);
     alert("❌ Error al procesar el pago.");
@@ -177,6 +178,10 @@ const handlePayment = async () => {
 
 
 
+
+function onPaymentSuccess() {
+  throw new Error("Function not implemented.")
+}
 /*
 // SDK de Mercado Pago
 import { MercadoPagoConfig, Preference } from 'mercadopago';

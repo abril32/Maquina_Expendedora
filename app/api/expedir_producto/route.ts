@@ -1,36 +1,29 @@
 import mqtt from "mqtt";
-import dotenv from "dotenv";
-import cron from "node-cron";
-
-// Cargar las variables de entorno solo si no es Next.js
-dotenv.config();
-const client = mqtt.connect(process.env.BROKER as string);
+import { NextResponse } from "next/server";
 
 export async function POST() {
-  const client = mqtt.connect(process.env.BROKER as string);
+  try {
+    const broker = process.env.BROKER;
+    const topic = process.env.TOPIC;
 
-  client.on("connect", () => {
-    console.log("Conectado al broker");
-    
-    client.subscribe(process.env.TOPIC as string, (err) => {
-      if (!err) {
-        client.publish(process.env.TOPIC as string, "Hello mqtt");
-      } else {
-        console.error("Error al suscribirse:", err);
-      }
+    if (!broker || !topic) {
+      return NextResponse.json({ error: "Faltan variables de entorno BROKER o TOPIC" }, { status: 400 });
+    }
+
+    const client = mqtt.connect(broker);
+
+    client.on("connect", () => {
+      console.log("✅ Conectado al broker MQTT");
+      client.publish(topic, "comprar", { qos: 1 }, (err) => {
+        if (err) console.error("❌ Error al publicar:", err);
+        else console.log("📤 Mensaje enviado al broker: comprar");
+        client.end();
+      });
     });
-  });
-  
- // Ejecutar cada minuto
-  cron.schedule("* * * * *", () => {
-    console.log("⏰ Revisando cada minuto...");
-    client.publish(process.env.TOPIC as string, "Hello mqtt cada minuto");
-  });
 
-  client.on("message", (topic, message) => {
-    console.log(`Mensaje en ${topic}:`, message.toString());
-    client.end();
-  });
-
-  return Response.json({ message: "Hola mundo" });
+    return NextResponse.json({ success: true, message: "Mensaje 'comprar' enviado al broker ✅" });
+  } catch (error) {
+    console.error("Error al enviar mensaje MQTT:", error);
+    return NextResponse.json({ error: "Error interno del servidor" }, { status: 500 });
+  }
 }
