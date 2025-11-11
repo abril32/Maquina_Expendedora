@@ -27,7 +27,7 @@ export function MercadoPagoModal({ isOpen, onClose, total, items }: MercadoPagoM
   const paymentMethods = [
     {
       id: "credit_card",
-      name: "Tarjeta de Crédito/Débito",
+      name: "Paypal",
       icon: CreditCard,
       description: "Visa, Mastercard, American Express",
     },
@@ -39,7 +39,7 @@ export function MercadoPagoModal({ isOpen, onClose, total, items }: MercadoPagoM
     },
     {
       id: "bank_transfer",
-      name: "Transferencia Bancaria",
+      name: "Stripe",
       icon: Building2,
       description: "Transferencia desde tu banco",
     },
