@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { CreditCard, Smartphone, Building2, X } from "lucide-react"
 import { useState } from "react"
-import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 
 interface CartItem {
   id: number
@@ -153,18 +152,20 @@ export function MercadoPagoModal({ isOpen, onClose, total, items }: MercadoPagoM
           </div>
 
           {/* Botón de pago */}
-          {/*Paypal boto,*/}
-          {!isProcessing && selectedPaymentMethod === 'Paypal'} && (
-          <div>
-            <PayPalScriptProvider options={{ clientId: "PAYPAL_CLIENT_ID" }}>
-              <PayPalButtons
-                //createOrder={createOrder}
-                //onApprove={onApprove}
-              />
-            </PayPalScriptProvider>
-
-          </div>
-          )
+<Button
+            onClick={handlePayment}
+            disabled={!selectedPaymentMethod || isProcessing}
+            className="w-full bg-blue-500 hover:bg-blue-600 text-white py-3"
+          >
+            {isProcessing ? (
+              <div className="flex items-center gap-2">
+                <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                Procesando pago...
+              </div>
+            ) : (
+              `Pagar ${formatPrice(total)}`
+            )}
+          </Button>
 
           <p className="text-xs text-gray-500 text-center">
             Tu pago está protegido por Mercado Pago. Transacción segura y encriptada.
@@ -202,20 +203,6 @@ preference.create({
   }
 })
   
-<Button
-            onClick={handlePayment}
-            disabled={!selectedPaymentMethod || isProcessing}
-            className="w-full bg-blue-500 hover:bg-blue-600 text-white py-3"
-          >
-            {isProcessing ? (
-              <div className="flex items-center gap-2">
-                <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                Procesando pago...
-              </div>
-            ) : (
-              `Pagar ${formatPrice(total)}`
-            )}
-          </Button>
 
 
 .then((response) => {
