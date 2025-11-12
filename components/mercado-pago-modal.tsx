@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { CreditCard, Smartphone, Building2, X } from "lucide-react"
 import { useState } from "react"
+import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 
 interface CartItem {
   id: number
@@ -49,39 +50,39 @@ export function MercadoPagoModal({ isOpen, onClose, total, items }: MercadoPagoM
     return `$${price.toLocaleString()}`
   }
 
-  
-const handlePayment = async () => {
-  if (!selectedPaymentMethod) {
-    alert("Por favor selecciona un método de pago.");
-    return;
-  }
 
-  setIsProcessing(true);
+  const handlePayment = async () => {
+    if (!selectedPaymentMethod) {
+      alert("Por favor selecciona un método de pago.");
+      return;
+    }
 
-  try {
-    // Simular procesamiento de pago
-    await new Promise((resolve) => setTimeout(resolve, 1500));
+    setIsProcessing(true);
 
-    // 🔹 Llamar a la API para actualizar stock
-    const res = await fetch("/api/actualizar-stock", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(items), // items = [{ id, quantity, ... }]
-    });
+    try {
+      // Simular procesamiento de pago
+      await new Promise((resolve) => setTimeout(resolve, 1500));
 
-    const mqttRes = await fetch("/api/comprar", { method: "POST" });
-    if (!mqttRes.ok) throw new Error("Error al enviar el mensaje MQTT");
+      // 🔹 Llamar a la API para actualizar stock
+      const res = await fetch("/api/actualizar-stock", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(items), // items = [{ id, quantity, ... }]
+      });
 
-    alert("✅ Pago confirmado y stock actualizado correctamente.");
-    onClose(); // Cierra el modal
-    onPaymentSuccess();
-  } catch (error) {
-    console.error(error);
-    alert("❌ Error al procesar el pago.");
-  } finally {
-    setIsProcessing(false);
-  }
-};
+      const mqttRes = await fetch("/api/comprar", { method: "POST" });
+      if (!mqttRes.ok) throw new Error("Error al enviar el mensaje MQTT");
+
+      alert("✅ Pago confirmado y stock actualizado correctamente.");
+      onClose(); // Cierra el modal
+      onPaymentSuccess();
+    } catch (error) {
+      console.error(error);
+      alert("❌ Error al procesar el pago.");
+    } finally {
+      setIsProcessing(false);
+    }
+  };
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -152,20 +153,18 @@ const handlePayment = async () => {
           </div>
 
           {/* Botón de pago */}
-          <Button
-            onClick={handlePayment}
-            disabled={!selectedPaymentMethod || isProcessing}
-            className="w-full bg-blue-500 hover:bg-blue-600 text-white py-3"
-          >
-            {isProcessing ? (
-              <div className="flex items-center gap-2">
-                <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                Procesando pago...
-              </div>
-            ) : (
-              `Pagar ${formatPrice(total)}`
-            )}
-          </Button>
+          {/*Paypal boto,*/}
+          {!isProcessing && selectedPaymentMethod === 'Paypal'} && (
+          <div>
+            <PayPalScriptProvider options={{ clientId: "PAYPAL_CLIENT_ID" }}>
+              <PayPalButtons
+                //createOrder={createOrder}
+                //onApprove={onApprove}
+              />
+            </PayPalScriptProvider>
+
+          </div>
+          )
 
           <p className="text-xs text-gray-500 text-center">
             Tu pago está protegido por Mercado Pago. Transacción segura y encriptada.
@@ -202,6 +201,23 @@ preference.create({
     ],
   }
 })
+  
+<Button
+            onClick={handlePayment}
+            disabled={!selectedPaymentMethod || isProcessing}
+            className="w-full bg-blue-500 hover:bg-blue-600 text-white py-3"
+          >
+            {isProcessing ? (
+              <div className="flex items-center gap-2">
+                <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                Procesando pago...
+              </div>
+            ) : (
+              `Pagar ${formatPrice(total)}`
+            )}
+          </Button>
+
+
 .then((response) => {
   console.log('Respuesta completa:', response);
   console.log('ID de la preferencia:', response.id || response?.id);
