@@ -35,7 +35,7 @@ export async function crearOrden() {
     'Content-Type': 'application/json', 
     'Authorization': 'Bearer' + access_token,
   }
-/*  editar / cambiar a tsx
+/*  editar / cambiar a tsx */
   const data = qs.stringify{
     intent: 'CAPTURE',
     purchase_units= [
@@ -53,7 +53,7 @@ export async function crearOrden() {
         ]
       }
     ]
-  }*/
+  }
   const respuesta = await axios.post(url, headers
     
   )
