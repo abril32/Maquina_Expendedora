@@ -152,7 +152,7 @@ export function MercadoPagoModal({ isOpen, onClose, total, items }: MercadoPagoM
           </div>
 
           {/* Botón de pago */}
-<Button
+          <Button
             onClick={handlePayment}
             disabled={!selectedPaymentMethod || isProcessing}
             className="w-full bg-blue-500 hover:bg-blue-600 text-white py-3"

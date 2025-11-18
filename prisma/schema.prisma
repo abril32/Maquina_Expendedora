@@ -39,3 +39,24 @@ model Productos {
   categoria String //van a haber categorias (bebidas, snacks, caramelos)
   createdAt DateTime @default(now())
 }
+
+model payments {
+  id                Int      @id @default(autoincrement())
+  tokens            Int
+  total_paid_amount Float
+  external_reference String
+  createdAt         DateTime @default(now())
+}
+
+model profile {
+  id                 Int      @id @default(autoincrement())
+  external_reference String   @unique
+  tokens             Int      @default(0)
+  createdAt          DateTime @default(now())
+}
+
+model alerts{
+  id String @id @default(uuid())
+  evento String
+  createdAt DateTime @default(now())
+}
