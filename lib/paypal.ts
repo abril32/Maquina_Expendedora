@@ -1,7 +1,7 @@
-import axios from "axios";
-import { NextResponse } from "next/server";
-import qs from "qs";
-
+import axios from "axios"
+import { NextResponse } from "next/server"
+import qs from "qs"
+import { prisma } from "@/lib/prisma" 
 const headers = {
   "Content-Type": "application/x-www-form-urlencoded",
 };
@@ -12,20 +12,21 @@ const data = qs.stringify({
 
 const url = "https://api-m.sandbox.paypal.com/v1/oauth2/token";
 
+//  Obtener Token de Acceso
 export async function generaTokenAcceso(): Promise<string> {
   const respuesta = await axios.post(url, data, {
-    headers: headers,
+    headers,
     auth: {
-      username: process.env.PAYPAL_CLIENT_ID || "user",
-      password: process.env.PAYPAL_CLIENT_SECRET || "pass",
+      username: process.env.PAYPAL_CLIENT_ID!,
+      password: process.env.PAYPAL_CLIENT_SECRET!,
     },
   });
 
   return respuesta.data.access_token;
 }
 
-//
-export async function POST(req:any) {
+//  WEBHOOK PAYPAL
+export async function POST(req: any) {
   const { searchParams } = new URL(req.url);
   const id = searchParams.get("data.id");
   const external_reference = searchParams.get("external_reference");
@@ -38,10 +39,8 @@ export async function POST(req:any) {
   }
 
   try {
-    // Fetch a new access token
     const accessToken = await generaTokenAcceso();
 
-    // Fetch payment details from PayPal API
     const response = await axios.get(
       `https://api-m.sandbox.paypal.com/v2/checkout/orders/${id}`,
       {
@@ -52,21 +51,23 @@ export async function POST(req:any) {
     );
 
     const { data } = response;
+
     console.log("Payment Data:", data);
     console.log("External Reference:", external_reference);
 
-    const tokens = data.purchase_units[0].description;
-    const total_paid_amount = data.purchase_units[0].amount.value;
+    const tokens = Number(data.purchase_units[0].description);
+    const total_paid_amount = Number(data.purchase_units[0].amount.value);
 
-    await createPurchase(tokens, total_paid_amount, external_reference);
-    await addTokenToProfile(tokens, external_reference);
+    await createPurchase(tokens, total_paid_amount, external_reference as string);
+    await addTokenToProfile(tokens, external_reference as string );
 
     return NextResponse.json(response.data, { status: 200 });
-  } catch (error) {
+  } catch (error: any) {
     console.error(
       "Error fetching payment data:",
-      error.response?.data  as string || error.message as string
+      error.response?.data || error.message
     );
+
     return NextResponse.json(
       { message: "Failed to fetch payment data" },
       { status: 500 }
@@ -74,72 +75,55 @@ export async function POST(req:any) {
   }
 }
 
-// Function to create a purchase record
-async function createPurchase(tokens: any, total_paid_amount:any , external_reference: any) {
-  const supabase = createClient(); // Replace with your actual Supabase client setup
-
-  const { error } = await supabase.from("payments").insert([
-    {
-      tokens,
-      total_paid_amount,
-      external_reference,
-    },
-  ]);
-
-  if (error) {
-    console.error("Error inserting data into Supabase:", error);
-    throw new Error("Failed to save data to database");
+//  Crear registro de compra
+async function createPurchase(tokens: number, total_paid_amount: number, external_reference: string) {
+  try {
+    await prisma.payments.create({
+      data: {
+        tokens,
+        total_paid_amount,
+        external_reference,
+      },
+    });
+  } catch (error) {
+    console.error("Error inserting payment with Prisma:", error);
+    throw new Error("Failed to save payment in database");
   }
 }
 
-// Function to update profile tokens
-async function addTokenToProfile(tokens:any , external_reference:any ) {
-  const supabase = createClient(); // Replace with your actual Supabase client setup
+//  Crear o actualizar perfil tokens
+async function addTokenToProfile(tokens: number, external_reference: string) {
+  try {
+    const profile = await prisma.profile.findUnique({
+      where: { external_reference },
+    });
 
-  const parsedTokens = Number(tokens);
-
-  // Fetch existing profile
-  const { data: existingProfile, error: fetchError } = await supabase
-    .from("profile")
-    .select("tokens")
-    .eq("external_reference", external_reference)
-    .single();
-
-  if (fetchError) {
-    if (fetchError.code === "PGRST116") {
-      // Create a new profile
-      const { error: insertError } = await supabase.from("profile").insert([
-        {
-          tokens: parsedTokens,
+    if (!profile) {
+      //  Si no existe → crear perfil
+      await prisma.profile.create({
+        data: {
+          tokens,
           external_reference,
         },
-      ]);
-
-      if (insertError) {
-        console.error(
-          "Error inserting new profile into Supabase:",
-          insertError
-        );
-        throw new Error("Failed to create profile in database");
-      }
+      });
       return;
-    } else {
-      console.error("Error fetching profile from Supabase:", fetchError);
-      throw new Error("Failed to fetch profile from database");
     }
-  }
 
-  // Update existing profile
-  const currentTokens = existingProfile.tokens || 0;
-  const updatedTokens = currentTokens + parsedTokens;
-
-  const { error: updateError } = await supabase
-    .from("profile")
-    .update({ tokens: updatedTokens })
-    .eq("external_reference", external_reference);
-
-  if (updateError) {
-    console.error("Error updating profile in Supabase:", updateError);
+    //  Si existe → actualizar tokens
+    await prisma.profile.update({
+      where: { external_reference },
+      data: {
+        tokens: profile.tokens + tokens,
+      },
+    });
+  } catch (error) {
+    console.error("Error updating profile with Prisma:", error);
     throw new Error("Failed to update profile in database");
   }
+}
+
+// Endpoint test para ver token
+export async function GET() {
+  const token = await generaTokenAcceso();
+  return NextResponse.json({ token });
 }

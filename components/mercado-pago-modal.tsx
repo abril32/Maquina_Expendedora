@@ -69,7 +69,7 @@ export function MercadoPagoModal({ isOpen, onClose, total, items }: MercadoPagoM
         body: JSON.stringify(items), // items = [{ id, quantity, ... }]
       });
 
-      const mqttRes = await fetch("/api/comprar", { method: "POST" });
+      const mqttRes = await fetch("/api/compras", { method: "POST" });
       if (!mqttRes.ok) throw new Error("Error al enviar el mensaje MQTT");
 
       alert("✅ Pago confirmado y stock actualizado correctamente.");
