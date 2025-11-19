@@ -7,9 +7,6 @@ const topic = process.env.TOPIC;
 export async function POST() {
   try {
     if(!topic) {
-      await prisma.alerts.create({data:{
-        evento: "No es posible conectarse al servidor porque el topic esta mal."
-      }})
     return NextResponse.json({ error: "No esta definico el topic me mqtt" }, { status: 500 });
     }
       if(!mqtt_client) {

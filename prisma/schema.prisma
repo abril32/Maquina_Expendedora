@@ -54,9 +54,3 @@ model profile {
   tokens             Int      @default(0)
   createdAt          DateTime @default(now())
 }
-
-model alerts{
-  id String @id @default(uuid())
-  evento String
-  createdAt DateTime @default(now())
-}
