@@ -1,5 +1,7 @@
 import {mqtt_client} from "@/lib/mqtt"
 import { NextResponse } from "next/server";
+import { prisma } from '@/lib/prisma'
+
 const topic = process.env.TOPIC;
 
 export async function POST() {
