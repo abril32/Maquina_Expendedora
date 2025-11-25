@@ -10,7 +10,8 @@ generator client {
 
 datasource db {
   provider = "sqlite"
-  url      = env("DATABASE_URL")
+  url = env("DATABASE_URL") 
+
 }
 
 model User {
@@ -53,4 +54,10 @@ model profile {
   external_reference String   @unique
   tokens             Int      @default(0)
   createdAt          DateTime @default(now())
+}
+
+model alerts{
+  id String @id @default(uuid())
+  evento String
+  createdAt DateTime @default(now())
 }

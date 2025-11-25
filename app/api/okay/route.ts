@@ -2,7 +2,7 @@ import { mqtt_client } from "@/lib/mqtt";
 import { NextResponse } from "next/server";
 
 const topic = process.env.TOPIC;
-
+const broker = process.env
 
 export async function GET() {
     //evaluar conexion con el broker 
@@ -14,7 +14,7 @@ export async function GET() {
           return NextResponse.json({ error: "No tenemos un cliente MQTT" }, { status: 500 });
         }
 
-      
     //si la conexion es correcta, devolver status code 200 y un msj acorde
+    if
     //si la conexion no es correcta, devolver status code 500 y un msj acorde
 }
