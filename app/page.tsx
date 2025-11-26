@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { MercadoPagoModal } from "@/components/mercado-pago-modal";
+import { MercadoPagoModal } from "@/components/metodos-pago-modal";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ShoppingCart, Plus, Moon, Sun } from "lucide-react";
@@ -431,14 +431,21 @@ export default function FoodOrderingApp() {
               </CardContent>
             </Card>
           </div>
-
+          {/* MODAL MERCADO PAGO */}
+          <MercadoPagoModal
+            isOpen={showPaymentModal}
+            onClose={() => setShowPaymentModal(false)}
+            total={getTotalPrice()}
+            items={cart}
+          />
+{/* 
            <form action="/api/compras_stripe" method="POST">
             <section>
               <button type="submit" role="link">
                 Checkout
               </button>
             </section>
-          </form>
+          </form> */}
         </div>
       </div>
     </div>

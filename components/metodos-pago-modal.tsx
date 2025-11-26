@@ -11,7 +11,6 @@ import { Card, CardContent } from "@/components/ui/card";
 import { CreditCard, Smartphone, Building2, X } from "lucide-react";
 import { useState } from "react";
 import { id } from "date-fns/locale";
-import { error } from "console";
 
 interface CartItem {
   id: number;
@@ -72,7 +71,6 @@ export function MercadoPagoModal({
     setIsProcessing(true);
 
     try {
-
       // 🔹 Llamar a la API para actualizar stock
       const res = await fetch("/api/actualizar-stock", {
         method: "POST",
@@ -80,35 +78,36 @@ export function MercadoPagoModal({
         body: JSON.stringify(items), // items = [{ id, quantity, ... }]
       });
 
-      if (selectedPaymentMethod === "paypal"){
+      if (selectedPaymentMethod === "paypal") {
         const pagar_paypal = await fetch("/api/compras", { method: "POST" });
         if (!pagar_paypal.ok) {
-          console.error(error);
+          console.error("hubo un problema");
           setIsProcessing(false);
           throw new Error("Error al pagar");
-        };
+        }
 
         alert("✅ Pago confirmado y stock actualizado correctamente.");
         onClose(); // Cierra el modal
         onPaymentSuccess();
-      };
+      }
 
+      if (selectedPaymentMethod === "stripe") {
+        const pagar_paypal = await fetch("/api/compras_stripe", {
+          method: "POST",
+        });
+        if (!pagar_paypal.ok) {
+          console.error("hubo un problema");
 
-      if (selectedPaymentMethod === "stripe"){
-        const pagar_paypal = await fetch("/api/compras_stripe", { method: "POST" });
-        if (!pagar_paypal.ok){
-          console.error(error);
           setIsProcessing(false);
           throw new Error("Error al pagar");
-        } ;
+        }
 
         alert("✅ Pago confirmado y stock actualizado correctamente.");
         onClose(); // Cierra el modal
         onPaymentSuccess();
-      };
-    }
-    catch(error){
-      console.error(error)
+      }
+    } catch (error) {
+      console.error(error);
     }
   };
 
@@ -196,21 +195,32 @@ export function MercadoPagoModal({
           </div>
 
           {/* Botón de pago */}
-          <Button
-            onClick={handlePayment}
-            disabled={!selectedPaymentMethod || isProcessing}
-            className="w-full bg-blue-500 hover:bg-blue-600 text-white py-3"
-          >
-            {isProcessing ? (
-              <div className="flex items-center gap-2">
-                <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                Procesando pago...
-              </div>
-            ) : (
-              `Pagar ${formatPrice(total)}`
-            )}
-          </Button>
+          {selectedPaymentMethod !== "stripe" && (
+            <Button
+              onClick={handlePayment}
+              disabled={!selectedPaymentMethod || isProcessing}
+              className="w-full bg-blue-500 hover:bg-blue-600 text-white py-3"
+            >
+              {isProcessing ? (
+                <div className="flex items-center gap-2">
+                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                  Procesando pago...
+                </div>
+              ) : (
+                `Pagar ${formatPrice(total)}`
+              )}
+            </Button>
+          )}
 
+          {selectedPaymentMethod === "stripe" && (
+            <form action="/api/compras_stripe" method="POST">
+              <section>
+                <button type="submit" role="link">
+                  Checkout
+                </button>
+              </section>
+            </form>
+          )}
           <p className="text-xs text-gray-500 text-center">
             Tu pago está protegido por Mercado Pago. Transacción segura y
             encriptada.
