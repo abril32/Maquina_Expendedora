@@ -431,13 +431,14 @@ export default function FoodOrderingApp() {
               </CardContent>
             </Card>
           </div>
-          {/* MODAL MERCADO PAGO */}
-          <MercadoPagoModal
-            isOpen={showPaymentModal}
-            onClose={() => setShowPaymentModal(false)}
-            total={getTotalPrice()}
-            items={cart}
-          />
+
+           <form action="/api/compras_stripe" method="POST">
+            <section>
+              <button type="submit" role="link">
+                Checkout
+              </button>
+            </section>
+          </form>
         </div>
       </div>
     </div>

@@ -1,7 +1,6 @@
 import { NextResponse } from 'next/server'
 import { headers } from 'next/headers'
-
-import { stripe } from '../../../lib/stripe'
+import { stripe } from '@/lib/stripe'
 
 export async function POST() {
   try {
@@ -13,7 +12,7 @@ export async function POST() {
       line_items: [
         {
           // Provide the exact Price ID (for example, price_1234) of the product you want to sell
-          price: '{{PRICE_ID}}',
+          price: "price_1SXV1NGtlErGyWKChzSvhoYN",
           quantity: 1,
         },
       ],
