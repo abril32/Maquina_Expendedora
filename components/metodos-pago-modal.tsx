@@ -1,32 +1,46 @@
-"use client"
+"use client";
 
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
-import { CreditCard, Smartphone, Building2, X } from "lucide-react"
-import { useState } from "react"
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { CreditCard, Smartphone, Building2, X } from "lucide-react";
+import { useState } from "react";
+import { id } from "date-fns/locale";
+import { error } from "console";
 
 interface CartItem {
-  id: number
-  name: string
-  price: number
-  quantity: number
+  id: number;
+  name: string;
+  price: number;
+  quantity: number;
 }
 
 interface MercadoPagoModalProps {
-  isOpen: boolean
-  onClose: () => void
-  total: number
-  items: CartItem[]
+  isOpen: boolean;
+  onClose: () => void;
+  total: number;
+  items: CartItem[];
 }
 
-export function MercadoPagoModal({ isOpen, onClose, total, items }: MercadoPagoModalProps) {
-  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<string | null>(null)
-  const [isProcessing, setIsProcessing] = useState(false)
+export function MercadoPagoModal({
+  isOpen,
+  onClose,
+  total,
+  items,
+}: MercadoPagoModalProps) {
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<
+    string | null
+  >(null);
+  const [isProcessing, setIsProcessing] = useState(false);
 
   const paymentMethods = [
     {
-      id: "credit_card",
+      id: "paypal",
       name: "Paypal",
       icon: CreditCard,
       description: "Visa, Mastercard, American Express",
@@ -38,17 +52,16 @@ export function MercadoPagoModal({ isOpen, onClose, total, items }: MercadoPagoM
       description: "Paga con tu cuenta de Mercado Pago",
     },
     {
-      id: "bank_transfer",
+      id: "stripe",
       name: "Stripe",
       icon: Building2,
       description: "Transferencia desde tu banco",
     },
-  ]
+  ];
 
   const formatPrice = (price: number) => {
-    return `$${price.toLocaleString()}`
-  }
-
+    return `$${price.toLocaleString()}`;
+  };
 
   const handlePayment = async () => {
     if (!selectedPaymentMethod) {
@@ -59,8 +72,6 @@ export function MercadoPagoModal({ isOpen, onClose, total, items }: MercadoPagoM
     setIsProcessing(true);
 
     try {
-      // Simular procesamiento de pago
-      await new Promise((resolve) => setTimeout(resolve, 1500));
 
       // 🔹 Llamar a la API para actualizar stock
       const res = await fetch("/api/actualizar-stock", {
@@ -69,17 +80,35 @@ export function MercadoPagoModal({ isOpen, onClose, total, items }: MercadoPagoM
         body: JSON.stringify(items), // items = [{ id, quantity, ... }]
       });
 
-      const mqttRes = await fetch("/api/compras", { method: "POST" });
-      if (!mqttRes.ok) throw new Error("Error al enviar el mensaje MQTT");
+      if (selectedPaymentMethod === "paypal"){
+        const pagar_paypal = await fetch("/api/compras", { method: "POST" });
+        if (!pagar_paypal.ok) {
+          console.error(error);
+          setIsProcessing(false);
+          throw new Error("Error al pagar");
+        };
 
-      alert("✅ Pago confirmado y stock actualizado correctamente.");
-      onClose(); // Cierra el modal
-      onPaymentSuccess();
-    } catch (error) {
-      console.error(error);
-      alert("❌ Error al procesar el pago.");
-    } finally {
-      setIsProcessing(false);
+        alert("✅ Pago confirmado y stock actualizado correctamente.");
+        onClose(); // Cierra el modal
+        onPaymentSuccess();
+      };
+
+
+      if (selectedPaymentMethod === "stripe"){
+        const pagar_paypal = await fetch("/api/compras_stripe", { method: "POST" });
+        if (!pagar_paypal.ok){
+          console.error(error);
+          setIsProcessing(false);
+          throw new Error("Error al pagar");
+        } ;
+
+        alert("✅ Pago confirmado y stock actualizado correctamente.");
+        onClose(); // Cierra el modal
+        onPaymentSuccess();
+      };
+    }
+    catch(error){
+      console.error(error)
     }
   };
 
@@ -88,8 +117,15 @@ export function MercadoPagoModal({ isOpen, onClose, total, items }: MercadoPagoM
       <DialogContent className="max-w-md mx-auto max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <div className="flex items-center justify-between">
-            <DialogTitle className="text-xl font-bold">Pagar con Mercado Pago</DialogTitle>
-            <Button variant="ghost" size="sm" onClick={onClose} className="h-6 w-6 p-0">
+            <DialogTitle className="text-xl font-bold">
+              Pagar con Mercado Pago
+            </DialogTitle>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={onClose}
+              className="h-6 w-6 p-0"
+            >
               <X className="h-4 w-4" />
             </Button>
           </div>
@@ -121,12 +157,15 @@ export function MercadoPagoModal({ isOpen, onClose, total, items }: MercadoPagoM
           <div className="space-y-3">
             <h3 className="font-semibold">Selecciona tu método de pago</h3>
             {paymentMethods.map((method) => {
-              const Icon = method.icon
+              const Icon = method.icon;
               return (
                 <Card
                   key={method.id}
-                  className={`cursor-pointer transition-all ${selectedPaymentMethod === method.id ? "ring-2 ring-blue-500 bg-blue-50" : "hover:bg-gray-50"
-                    }`}
+                  className={`cursor-pointer transition-all ${
+                    selectedPaymentMethod === method.id
+                      ? "ring-2 ring-blue-500 bg-blue-50"
+                      : "hover:bg-gray-50"
+                  }`}
                   onClick={() => setSelectedPaymentMethod(method.id)}
                 >
                   <CardContent className="p-4">
@@ -134,11 +173,16 @@ export function MercadoPagoModal({ isOpen, onClose, total, items }: MercadoPagoM
                       <Icon className="w-6 h-6 text-blue-600" />
                       <div className="flex-1">
                         <p className="font-medium">{method.name}</p>
-                        <p className="text-sm text-gray-500">{method.description}</p>
+                        <p className="text-sm text-gray-500">
+                          {method.description}
+                        </p>
                       </div>
                       <div
-                        className={`w-4 h-4 rounded-full border-2 ${selectedPaymentMethod === method.id ? "bg-blue-500 border-blue-500" : "border-gray-300"
-                          }`}
+                        className={`w-4 h-4 rounded-full border-2 ${
+                          selectedPaymentMethod === method.id
+                            ? "bg-blue-500 border-blue-500"
+                            : "border-gray-300"
+                        }`}
                       >
                         {selectedPaymentMethod === method.id && (
                           <div className="w-full h-full rounded-full bg-white scale-50"></div>
@@ -147,7 +191,7 @@ export function MercadoPagoModal({ isOpen, onClose, total, items }: MercadoPagoM
                     </div>
                   </CardContent>
                 </Card>
-              )
+              );
             })}
           </div>
 
@@ -168,47 +212,15 @@ export function MercadoPagoModal({ isOpen, onClose, total, items }: MercadoPagoM
           </Button>
 
           <p className="text-xs text-gray-500 text-center">
-            Tu pago está protegido por Mercado Pago. Transacción segura y encriptada.
+            Tu pago está protegido por Mercado Pago. Transacción segura y
+            encriptada.
           </p>
         </div>
       </DialogContent>
     </Dialog>
-  )
+  );
 }
-
-
-
 
 function onPaymentSuccess() {
-  throw new Error("Function not implemented.")
+  throw new Error("Function not implemented.");
 }
-/*
-// SDK de Mercado Pago
-import { MercadoPagoConfig, Preference } from 'mercadopago';
-// Agrega credenciales
-const client = new MercadoPagoConfig({ accessToken: 'YOUR_ACCESS_TOKEN' });
-
-const preference = new Preference(client);
-
-preference.create({
-  body: {
-    items: [
-      {
-        title: 'Mi producto',
-        quantity: 1,
-        unit_price: 2000,
-        id: ''
-      }
-    ],
-  }
-})
-  
-
-
-.then((response) => {
-  console.log('Respuesta completa:', response);
-  console.log('ID de la preferencia:', response.id || response?.id);
-})
-.catch((error) => {
-  console.error('Error al crear preferencia:', error);
-});*/
