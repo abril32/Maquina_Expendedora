@@ -49,14 +49,14 @@ export default function FoodOrderingApp() {
   const [isRegistering, setIsRegistering] = useState(false);
   const [user, setUser] = useState<string | null>(null);
 
-  // // ✅ Verifica si el usuario ya está logueado
-  // useEffect(() => {
-  //   const storedUser = localStorage.getItem("user")
-  //   if (storedUser) {
-  //     setUser(storedUser)
-  //     setIsLoggedIn(true)
-  //   }
-  // }, [])
+   // ✅ Verifica si el usuario ya está logueado
+   useEffect(() => {
+     const storedUser = localStorage.getItem("user")
+     if (storedUser) {
+       setUser(storedUser)
+       setIsLoggedIn(true)
+     }
+ }, [])
 
   // ✅ LOGIN
   const handleLogin = async (e: React.FormEvent) => {
